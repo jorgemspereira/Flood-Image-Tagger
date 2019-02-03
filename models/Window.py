@@ -78,9 +78,22 @@ class Window(Frame):
         self.save_button.grid(row=4, column=2)
         self.quit_button.grid(row=4, column=1)
 
+    def popup_leave(self):
+        win = Toplevel(self)
+        win.wm_title("Are you sure?")
+
+        label = Label(win, text="Some results are not saved. Are you sure you want to leave?")
+        label.grid(row=0, column=0, columnspan=2)
+
+        yes_button = Button(win, text="Yes", command=exit, width=25)
+        no_button = Button(win, text="No", command=win.destroy, width=25)
+        yes_button.grid(row=1, column=0)
+        no_button.grid(row=1, column=1)
 
     def exit_client(self):
-        exit()
+        if len(self.non_saved) == 0:
+            exit()
+        self.popup_leave()
 
     def save_client(self):
         if not self.results_exists():

@@ -9,7 +9,7 @@ def start_window(args):
     root.geometry("810x375")
     root.resizable(False, False)
     app = Window(args.path_to_csv, args.path_to_dataset, root)
-    root.mainloop()
+    app.mainloop()
 
 
 def parse_args():
