@@ -52,8 +52,9 @@ class Window(Frame):
         self.init_label.grid_forget()
 
     def start_existing(self):
-        # TODO
-        print("lol")
+        entries = pd.read_csv(self.path_to_csv, header=None).shape[0]
+        self.images = self.images[entries:]
+        self.start_begin()
 
     def start_begin(self):
         self.clean_init_elements()
