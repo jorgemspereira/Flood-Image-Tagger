@@ -82,9 +82,13 @@ class Window(Frame):
         exit()
 
     def save_client(self):
-        # TODO: Check if exists
-        df = pd.DataFrame(self.non_saved, columns=['image', 'class'])
-        df.to_csv(self.path_to_csv, index=False)
+        if not self.results_exists():
+            df = pd.DataFrame(self.non_saved)
+        else:
+            df = pd.read_csv(self.path_to_csv, header=None)
+            df = df.append(pd.DataFrame(self.non_saved), ignore_index=True)
+
+        df.to_csv(self.path_to_csv, index=False, header=False)
         self.save_button.config(state="disable")
         self.non_saved = []
 
