@@ -9,6 +9,7 @@ def start_window(args):
     root.geometry("810x375")
     root.resizable(False, False)
     root.iconbitmap(default='./icon/ist_logo.ico')
+    root.protocol("WM_DELETE_WINDOW", lambda: None)
     app = Window(args.path_to_csv, args.path_to_dataset, root)
     app.mainloop()
 
