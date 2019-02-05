@@ -1,4 +1,5 @@
 import os
+import random
 from pathlib import Path
 from tkinter import *
 
@@ -22,13 +23,15 @@ class Window(Frame):
         self.non_saved = []
 
         self.current_image_idx = 0
-        self.init_label = None
+        self.init_image_label = None
+        self.previous_button = None
         self.image_label = None
         self.save_button = None
         self.quit_button = None
-        self.previous_button = None
         self.next_button = None
         self.orig_color = None
+        self.init_label_1 = None
+        self.init_label_2 = None
 
         self.init_window()
 
@@ -36,27 +39,43 @@ class Window(Frame):
         self.master.title("Image Tagger")
         self.pack(fill=BOTH, expand=1)
 
-        self.init_label = Label(self, text="Hey there good lookin!")
-        self.init_label.grid(row=0, column=0, columnspan=2)
+        self.init_label_1 = Label(self, text="Welcome to Flood Image Tagger")
+        self.init_label_1.config(width=20, wraplengt=150, font=("Courier", 8))
+        self.init_label_1.grid(row=0, column=1, columnspan=1)
 
-        start_from_existing = Button(self, text="Classify from the last!", command=self.start_existing)
-        start_begin = Button(self, text="Verify already classified!", command=self.start_begin)
+        self.init_label_2 = Label(self, text="by: Jorge Pereira")
+        self.init_label_2.config(width=20, wraplengt=150, font=("Courier", 8))
+        self.init_label_2.grid(row=4, column=1, columnspan=1)
+
+        init_image = random.choice(self.images)
+        init_image = Image.open(os.path.join(self.path_to_dataset, init_image))
+        init_image = init_image.resize((640, 360), Image.ANTIALIAS)
+        render = ImageTk.PhotoImage(init_image)
+
+        self.init_image_label = Label(self, image=render)
+        self.init_image_label.image = render
+        self.init_image_label.grid(row=0, column=0, rowspan=5, sticky=W + E + N + S, padx=5, pady=5)
+
+        start_from_existing = Button(self, text="Classify from the last", command=self.start_existing)
+        start_begin = Button(self, text="Verify already classified", command=self.start_begin)
 
         self.orig_color = start_begin.cget("background")
         self.init_buttons = [start_from_existing, start_begin]
 
         if not self.results_exists():
             start_from_existing.config(state="disabled")
-            start_begin.config(text="Start from the beginning!")
+            start_begin.config(text="Start from the beginning")
 
         for idx, button in enumerate(self.init_buttons):
             button.config(height=3, width=20)
-            button.grid(row=1, column=(idx + 1), sticky=W)
+            button.grid(row=(1 + idx), column=1, sticky=W)
 
     def clean_init_elements(self):
         for button in self.init_buttons:
             button.grid_forget()
-        self.init_label.grid_forget()
+        self.init_image_label.grid_forget()
+        self.init_label_1.grid_forget()
+        self.init_label_2.grid_forget()
 
     def start_existing(self):
         entries = pd.read_csv(self.path_to_csv, header=None).shape[0]
