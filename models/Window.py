@@ -82,11 +82,13 @@ class Window(Frame):
 
     def get_dataset(self):
         if self.current_data_frame is None:
-            return pd.read_csv(self.path_to_csv, header=None)
+            self.current_data_frame = pd.read_csv(self.path_to_csv, header=None)
+            return self.current_data_frame
 
         if self.current_data_frame is not None and self.has_updates:
+            self.current_data_frame = pd.read_csv(self.path_to_csv, header=None)
             self.has_updates = False
-            return pd.read_csv(self.path_to_csv, header=None)
+            return self.current_data_frame
 
         if self.current_data_frame is not None and not self.has_updates:
             return self.current_data_frame
