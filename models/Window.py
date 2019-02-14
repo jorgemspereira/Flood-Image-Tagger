@@ -23,6 +23,9 @@ class Window(Frame):
         self.non_saved = []
 
         self.current_image_idx = 0
+        self.has_updates = False
+
+        self.current_data_frame = None
         self.init_image_label = None
         self.previous_button = None
         self.image_label = None
@@ -77,9 +80,27 @@ class Window(Frame):
         self.init_label_1.grid_forget()
         self.init_label_2.grid_forget()
 
+    def get_dataset(self):
+        if self.current_data_frame is None:
+            return pd.read_csv(self.path_to_csv, header=None)
+
+        if self.current_data_frame is not None and self.has_updates:
+            self.has_updates = False
+            return pd.read_csv(self.path_to_csv, header=None)
+
+        if self.current_data_frame is not None and not self.has_updates:
+            return self.current_data_frame
+
+    def get_first_index(self):
+        values = self.get_dataset().iloc[:, 0].tolist()
+        values = list(map(str, values))
+
+        for count, image in enumerate(self.images):
+            if image.split(".")[0] not in values:
+                return count
+
     def start_existing(self):
-        entries = pd.read_csv(self.path_to_csv, header=None).shape[0]
-        self.current_image_idx = entries
+        self.current_image_idx = self.get_first_index()
         self.start_begin()
 
     def start_begin(self):
@@ -122,7 +143,7 @@ class Window(Frame):
         if not self.results_exists():
             df = pd.DataFrame(self.non_saved)
         else:
-            df = pd.read_csv(self.path_to_csv, header=None)
+            df = self.get_dataset()
             for index, row in df.iterrows():
                 for element in self.non_saved:
                     if str(row[0]) == str(element[0]):
@@ -132,6 +153,7 @@ class Window(Frame):
 
             if len(self.non_saved) != 0:
                 df = df.append(pd.DataFrame(self.non_saved), ignore_index=True)
+                self.has_updates = True
 
         df.to_csv(self.path_to_csv, index=False, header=False)
         self.save_button.config(state="disable")
@@ -244,12 +266,12 @@ class Window(Frame):
         return None
 
     def classification_from_file(self):
-        try:
-            if self.results_exists():
-                file = pd.read_csv(self.path_to_csv, header=None)
-                return FloodClass(file.loc[[self.current_image_idx]][1].values[0])
-        except KeyError:
-            return None
+        if self.results_exists():
+            current_img = self.images[self.current_image_idx].split(".")[0]
+            for index, row in self.get_dataset().iterrows():
+                if str(row[0]) == current_img:
+                    return FloodClass(row[1])
+
         return None
 
     def results_exists(self):
