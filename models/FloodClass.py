@@ -6,4 +6,5 @@ class FloodClass(Enum):
     slight = 1
     moderate = 2
     severe = 3
+    doubts = 4
 

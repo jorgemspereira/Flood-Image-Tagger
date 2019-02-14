@@ -61,17 +61,40 @@ class Window(Frame):
 
         start_from_existing = Button(self, text="Classify from the last", command=self.start_existing)
         start_begin = Button(self, text="Verify already classified", command=self.start_begin)
+        verify_doubts = Button(self, text="Verify images with doubts", command=self.start_doubts)
 
         self.orig_color = start_begin.cget("background")
-        self.init_buttons = [start_from_existing, start_begin]
+        self.init_buttons = [start_from_existing, start_begin, verify_doubts]
 
         if not self.results_exists():
             start_from_existing.config(state="disabled")
             start_begin.config(text="Start from the beginning")
 
+        if not self.exists_images_with_doubts():
+            verify_doubts.config(state="disable")
+
         for idx, button in enumerate(self.init_buttons):
             button.config(height=3, width=20)
             button.grid(row=(1 + idx), column=1, sticky=W)
+
+    def exists_images_with_doubts(self):
+        if self.results_exists():
+            df = self.get_dataset()
+            for index, row in df.iterrows():
+                if FloodClass(row[1]) == FloodClass.doubts:
+                    return True
+
+        return False
+
+    def start_doubts(self):
+        lst = []
+        df = self.get_dataset()
+        for index, row in df.iterrows():
+            if FloodClass(row[1]) == FloodClass.doubts:
+                lst.append(str(row[0]))
+
+        self.images = [x for x in self.images if not x.split(".")[0] not in lst]
+        self.start_begin()
 
     def clean_init_elements(self):
         for button in self.init_buttons:
@@ -116,6 +139,7 @@ class Window(Frame):
         slight = Button(self, text="Slight", command=lambda: self.show_next_image(FloodClass.slight), fg="sandy brown")
         moderate = Button(self, text="Moderate", command=lambda: self.show_next_image(FloodClass.moderate), fg="orange")
         severe = Button(self, text="Severe", command=lambda: self.show_next_image(FloodClass.severe), fg="red")
+        doubts = Button(self, text="I have doubts", command=lambda: self.show_next_image(FloodClass.doubts), fg="blue")
 
         none.bind("<Enter>", lambda event: event.widget.configure(text="]-1e+100, 0.00] meters"))
         none.bind("<Leave>", lambda event: event.widget.configure(text="None"))
@@ -129,7 +153,10 @@ class Window(Frame):
         severe.bind("<Enter>", lambda event: event.widget.configure(text="]5.00, 1e+100] meters"))
         severe.bind("<Leave>", lambda event: event.widget.configure(text="Severe"))
 
-        self.classification_buttons = [none, slight, moderate, severe]
+        doubts.bind("<Enter>", lambda event: event.widget.configure(text="Image is not explicit"))
+        doubts.bind("<Leave>", lambda event: event.widget.configure(text="I have doubts"))
+
+        self.classification_buttons = [none, slight, moderate, severe, doubts]
 
         for idx, button in enumerate(self.classification_buttons):
             button.config(height=3, width=20)
@@ -138,8 +165,8 @@ class Window(Frame):
         self.quit_button = Button(self, text="Quit", command=self.exit_client, height=3, width=9)
         self.save_button = Button(self, text="Save", command=self.save_client, state="disabled", height=3, width=9)
 
-        self.save_button.grid(row=4, column=2)
-        self.quit_button.grid(row=4, column=1)
+        self.save_button.grid(row=5, column=2)
+        self.quit_button.grid(row=5, column=1)
 
     def save_client(self):
         if not self.results_exists():
@@ -185,7 +212,7 @@ class Window(Frame):
         render = ImageTk.PhotoImage(image)
 
         canvas = Canvas(self, width=640, height=360)
-        canvas.grid(row=0, column=0, rowspan=5, sticky=W + E + N + S, padx=5, pady=5)
+        canvas.grid(row=0, column=0, rowspan=6, sticky=W + E + N + S, padx=5, pady=5)
         canvas.create_image(0, 0, image=render, anchor=NW)
         canvas.image = render
 
@@ -212,7 +239,10 @@ class Window(Frame):
         if len(self.non_saved):
             self.save_button.config(state="active")
 
-        self.current_image_idx = self.current_image_idx + 1 if next_img else self.current_image_idx - 1
+        idx = self.current_image_idx + 1 if next_img else self.current_image_idx - 1
+        idx = idx - 1 if idx >= len(self.images) else idx
+        self.current_image_idx = idx
+
         self.update_buttons_classes()
         self.show_img()
 
@@ -271,7 +301,8 @@ class Window(Frame):
     def classification_from_file(self):
         if self.results_exists():
             current_img = self.images[self.current_image_idx].split(".")[0]
-            for index, row in self.get_dataset().iterrows():
+            dataset = self.get_dataset()
+            for index, row in dataset.iterrows():
                 if str(row[0]) == current_img:
                     return FloodClass(row[1])
 
