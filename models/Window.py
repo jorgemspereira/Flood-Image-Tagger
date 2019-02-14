@@ -187,6 +187,7 @@ class Window(Frame):
         canvas = Canvas(self, width=640, height=360)
         canvas.grid(row=0, column=0, rowspan=5, sticky=W + E + N + S, padx=5, pady=5)
         canvas.create_image(0, 0, image=render, anchor=NW)
+        canvas.image = render
 
         self.previous_button = Button(self, text="Previous", command=self.previous_image_button_handler, width=10)
         self.next_button = Button(self, text="Next", command=self.next_image_button_handler, width=10)
