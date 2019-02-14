@@ -21,7 +21,7 @@ def parse_args():
                                 "\\Classification\\development_set\\devset_images",
                         help="path for the MediaEval 2017 dataset")
     parser.add_argument("--result", dest="path_to_csv", action="store_const",
-                        default="C:\\Users\\jorge\\Desktop\\result.csv", const=None,
+                        default=".\\results\\dataset_mediaeval_2017.csv", const=None,
                         help="path for the .csv file containing the classification")
     return parser.parse_args()
 
