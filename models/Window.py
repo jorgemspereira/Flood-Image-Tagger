@@ -207,7 +207,11 @@ class Window(Frame):
         no_button.grid(row=1, column=0)
 
     def show_img(self):
-        image = Image.open(os.path.join(self.path_to_dataset, self.images[self.current_image_idx]))
+        image_name = self.images[self.current_image_idx]
+        image_count = self.current_image_idx + 1
+        image_total = len(self.images)
+
+        image = Image.open(os.path.join(self.path_to_dataset, image_name))
         image = image.resize((640, 360), Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
 
@@ -218,11 +222,11 @@ class Window(Frame):
 
         self.previous_button = Button(self, text="Previous", command=self.previous_image_button_handler, width=10)
         self.next_button = Button(self, text="Next", command=self.next_image_button_handler, width=10)
+        self.master.title("Image Tagger - ({}) - ({}/{})".format(image_name, image_count, image_total))
         self.verify_directional_buttons()
 
         canvas.create_window(270, 340, anchor=S, window=self.previous_button)
         canvas.create_window(370, 340, anchor=S, window=self.next_button)
-        canvas.mainloop()
 
     def show_next_image(self, flood_class=None, next_img=True):
         current_image = self.images[self.current_image_idx]
