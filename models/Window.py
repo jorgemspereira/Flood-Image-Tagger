@@ -52,7 +52,7 @@ class Window(Frame):
 
         init_image = random.choice(self.images)
         init_image = Image.open(os.path.join(self.path_to_dataset, init_image))
-        init_image = init_image.resize((640, 360), Image.ANTIALIAS)
+        init_image = init_image.resize((800, 540), Image.ANTIALIAS)
         render = ImageTk.PhotoImage(init_image)
 
         self.init_image_label = Label(self, image=render)
@@ -182,10 +182,10 @@ class Window(Frame):
 
             if len(self.non_saved) != 0:
                 df = df.append(pd.DataFrame(self.non_saved), ignore_index=True)
-                self.has_updates = True
 
         df.to_csv(self.path_to_csv, index=False, header=False)
         self.save_button.config(state="disable")
+        self.has_updates = True
         self.non_saved = []
 
     def exit_client(self):
@@ -212,21 +212,21 @@ class Window(Frame):
         image_total = len(self.images)
 
         image = Image.open(os.path.join(self.path_to_dataset, image_name))
-        image = image.resize((640, 360), Image.ANTIALIAS)
+        image = image.resize((800, 540), Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
 
-        canvas = Canvas(self, width=640, height=360)
+        canvas = Canvas(self, width=800, height=540)
         canvas.grid(row=0, column=0, rowspan=6, sticky=W + E + N + S, padx=5, pady=5)
         canvas.create_image(0, 0, image=render, anchor=NW)
         canvas.image = render
 
-        self.previous_button = Button(self, text="Previous", command=self.previous_image_button_handler, width=10)
-        self.next_button = Button(self, text="Next", command=self.next_image_button_handler, width=10)
+        self.previous_button = Button(self, text="Previous", command=self.previous_image_button_handler, width=20)
+        self.next_button = Button(self, text="Next", command=self.next_image_button_handler, width=20)
         self.master.title("Image Tagger - ({}) - ({}/{})".format(image_name, image_count, image_total))
         self.verify_directional_buttons()
 
-        canvas.create_window(270, 340, anchor=S, window=self.previous_button)
-        canvas.create_window(370, 340, anchor=S, window=self.next_button)
+        canvas.create_window(310, 530, anchor=S, window=self.previous_button)
+        canvas.create_window(490, 530, anchor=S, window=self.next_button)
 
     def show_next_image(self, flood_class=None, next_img=True):
         current_image = self.images[self.current_image_idx]

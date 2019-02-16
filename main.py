@@ -6,7 +6,7 @@ from models.Window import Window
 
 def start_window(args):
     root = Tk()
-    root.geometry("810x375")
+    root.geometry("970x550")
     root.resizable(False, False)
     root.iconbitmap(default='./icon/ist_logo.ico')
     root.protocol("WM_DELETE_WINDOW", lambda: None)
