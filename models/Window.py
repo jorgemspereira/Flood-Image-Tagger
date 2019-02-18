@@ -124,6 +124,8 @@ class Window(Frame):
             if image.split(".")[0] not in values:
                 return count
 
+        return len(self.images) - 1
+
     def start_existing(self):
         self.current_image_idx = self.get_first_index()
         self.start_begin()
