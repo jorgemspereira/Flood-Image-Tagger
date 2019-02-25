@@ -256,6 +256,7 @@ class Window(Frame):
         self.clean_color_buttons()
         classification = self.get_classification_for_image()
         if classification is not None:
+            # noinspection PyTypeChecker
             button = self.classification_buttons[classification.value]
             button.config(bg="sky blue")
 
