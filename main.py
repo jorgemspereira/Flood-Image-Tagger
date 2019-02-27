@@ -17,12 +17,11 @@ def start_window(args):
 def parse_args():
     parser = argparse.ArgumentParser(description="Flood image tagger.")
     parser.add_argument("--images", dest="path_to_dataset", action="store_const", const=None,
-                        default="C:\\Users\\jorge\\Desktop\\Thesis\\datasets\\MediaEval2017"
-                                "\\Classification\\test_set\\testset_images",
-                        help="path for the MediaEval 2017 dataset")
+                        default="C:\\Users\\jorge\\Desktop\\Thesis\\datasets\\EuropeanFlood2013\\imgs_small",
+                        help="Path for fold with the images.")
     parser.add_argument("--result", dest="path_to_csv", action="store_const",
-                        default=".\\results\\dataset_test_mediaeval_2017.csv", const=None,
-                        help="path for the .csv file containing the classification")
+                        default=".\\results\\dataset_european_flood_2013.csv", const=None,
+                        help="Path for the .csv file containing the classification.")
     return parser.parse_args()
 
 

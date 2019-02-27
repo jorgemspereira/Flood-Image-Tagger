@@ -179,6 +179,7 @@ class Window(Frame):
                 for element in self.non_saved:
                     if str(row[0]) == str(element[0]):
                         row[1] = element[1]
+                        df.iloc[index] = row
                         self.non_saved.remove(element)
                         break
 
