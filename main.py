@@ -1,7 +1,7 @@
 import argparse
 from tkinter import Tk
 
-from models.Window import Window
+from helpers.Window import Window
 
 
 def start_window(args):

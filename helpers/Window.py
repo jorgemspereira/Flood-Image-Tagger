@@ -6,7 +6,7 @@ from tkinter import *
 import pandas as pd
 from PIL import ImageTk, Image
 
-from models.FloodClass import FloodClass
+from helpers.FloodClass import FloodClass
 
 
 class Window(Frame):
@@ -86,16 +86,6 @@ class Window(Frame):
 
         return False
 
-    def start_doubts(self):
-        lst = []
-        df = self.get_dataset()
-        for index, row in df.iterrows():
-            if FloodClass(row[1]) == FloodClass.doubts:
-                lst.append(str(row[0]))
-
-        self.images = [x for x in self.images if not x.split(".")[0] not in lst]
-        self.start_begin()
-
     def clean_init_elements(self):
         for button in self.init_buttons:
             button.grid_forget()
@@ -126,11 +116,36 @@ class Window(Frame):
 
         return len(self.images) - 1
 
-    def start_existing(self):
-        self.current_image_idx = self.get_first_index()
-        self.start_begin()
+    def start_doubts(self):
+        lst = []
+        df = self.get_dataset()
+        for index, row in df.iterrows():
+            if FloodClass(row[1]) == FloodClass.doubts:
+                for image in self.images:
+                    if image.split(".")[0] == str(row[0]):
+                        lst.append(image)
+                        break
+
+        self.images = lst
+        self.start()
 
     def start_begin(self):
+        lst = []
+        df = self.get_dataset()
+        for index, row in df.iterrows():
+            for image in self.images:
+                if image.split(".")[0] == str(row[0]):
+                    lst.append(image)
+                    break
+
+        self.images = lst
+        self.start()
+
+    def start_existing(self):
+        self.current_image_idx = self.get_first_index()
+        self.start()
+
+    def start(self):
         self.clean_init_elements()
         self.show_buttons_classes()
         self.update_buttons_classes()
