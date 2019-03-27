@@ -1,5 +1,7 @@
+import json
 import os
 import random
+import webbrowser
 from pathlib import Path
 from tkinter import *
 
@@ -245,6 +247,37 @@ class Window(Frame):
 
         canvas.create_window(310, 530, anchor=S, window=self.previous_button)
         canvas.create_window(490, 530, anchor=S, window=self.next_button)
+
+        ############################## TO DELETE ######################################
+        #
+        # if self.get_classification_for_image() != FloodClass.none:
+        #     path = "C:\\Users\\jorge\\Desktop\\Thesis\\datasets\\MediaEval2017\\" \
+        #            "Classification\\test_set\\testset_images_metadata.json"
+        #
+        #     with open(path, encoding="utf-8") as f:
+        #         data = json.load(f, encoding='utf-8')
+        #
+        #     url = [obj for obj in data['images'] if obj['image_id'] == image_name.split(".")[0]][0]['image_url']
+        #     webbrowser.get('windows-default').open(url, new=2)
+        #
+        ##############################################################################
+
+        ############################## TO DELETE ######################################
+        #
+        # try:
+        #     json_path = "C:\\Users\\jorge\\Desktop\\Thesis\\datasets\\EuropeanFlood2013\\metadata.json"
+        #
+        #     with open(json_path, encoding="utf-8") as f:
+        #         data = json.load(f, encoding='utf-8')
+        #
+        #    url = [obj for obj in data if str(obj['pageid']) == image_name.split(".")[0]][0]['descriptionurl']
+        #    webbrowser.get('windows-default').open(url, new=2)
+        # except Exception:
+        #     path = "C:\\Users\\jorge\\Desktop\\european-flood-2013_imgs_large\\imgs_large\\"
+        #     path = path + image_name
+        #     os.startfile(path)
+        #
+        ##############################################################################
 
     def show_next_image(self, flood_class=None, next_img=True):
         current_image = self.images[self.current_image_idx]

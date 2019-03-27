@@ -28,9 +28,9 @@ def start_window(args):
 def parse_args():
     parser = argparse.ArgumentParser(description="Flood image tagger.")
     parser.add_argument("--images", dest="path_to_dataset", action="store_const", const=None,
-                        default=MEDIAEVAL_2017_TEST_SPLIT_IMAGES, help="Path for fold with the images.")
+                        default=EUROPEAN_FLOODS_2013_IMAGES, help="Path for fold with the images.")
     parser.add_argument("--result", dest="path_to_csv", action="store_const",
-                        default=MEDIAEVAL_2017_TEST_SPLIT_TAGS, const=None,
+                        default=EUROPEAN_FLOODS_2013_TAGS, const=None,
                         help="Path for the .csv file containing the classification.")
     return parser.parse_args()
 
