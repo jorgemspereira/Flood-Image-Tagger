@@ -96,6 +96,9 @@ class Window(Frame):
         self.init_label_2.grid_forget()
 
     def get_dataset(self):
+        if not self.results_exists():
+            return None
+
         if self.current_data_frame is None:
             self.current_data_frame = pd.read_csv(self.path_to_csv, header=None)
             return self.current_data_frame
@@ -132,15 +135,15 @@ class Window(Frame):
         self.start()
 
     def start_begin(self):
-        lst = []
         df = self.get_dataset()
-        for index, row in df.iterrows():
-            for image in self.images:
-                if image.split(".")[0] == str(row[0]):
-                    lst.append(image)
-                    break
-
-        self.images = lst
+        if df is not None:
+            lst = []
+            for index, row in df.iterrows():
+                for image in self.images:
+                    if image.split(".")[0] == str(row[0]):
+                        lst.append(image)
+                        break
+            self.images = lst
         self.start()
 
     def start_existing(self):
@@ -248,7 +251,7 @@ class Window(Frame):
         canvas.create_window(310, 530, anchor=S, window=self.previous_button)
         canvas.create_window(490, 530, anchor=S, window=self.next_button)
 
-        ############################## TO DELETE ######################################
+        ############################ TO DELETE (MEDIAEVAL 2017) ######################
         #
         # if self.get_classification_for_image() != FloodClass.none:
         #     path = "C:\\Users\\jorge\\Desktop\\Thesis\\datasets\\MediaEval2017\\" \
@@ -262,7 +265,7 @@ class Window(Frame):
         #
         ##############################################################################
 
-        ############################## TO DELETE ######################################
+        ############################## TO DELETE (EUROPEAN FLOODS) ###################
         #
         # try:
         #     json_path = "C:\\Users\\jorge\\Desktop\\Thesis\\datasets\\EuropeanFlood2013\\metadata.json"
@@ -277,6 +280,14 @@ class Window(Frame):
         #     path = path + image_name
         #     os.startfile(path)
         #
+        ##############################################################################
+
+        ############################ TO DELETE (MEDIAEVAL 2018) ######################
+
+        img_id = image_name.split(".")[0]
+        url = "https://twitter.com/statuses/{}".format(img_id)
+        webbrowser.get('windows-default').open(url, new=2)
+
         ##############################################################################
 
     def show_next_image(self, flood_class=None, next_img=True):
