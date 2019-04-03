@@ -283,11 +283,11 @@ class Window(Frame):
         ##############################################################################
 
         ############################ TO DELETE (MEDIAEVAL 2018) ######################
-
-        img_id = image_name.split(".")[0]
-        url = "https://twitter.com/statuses/{}".format(img_id)
-        webbrowser.get('windows-default').open(url, new=2)
-
+        #
+        # img_id = image_name.split(".")[0]
+        # url = "https://twitter.com/statuses/{}".format(img_id)
+        # webbrowser.get('windows-default').open(url, new=2)
+        #
         ##############################################################################
 
     def show_next_image(self, flood_class=None, next_img=True):
